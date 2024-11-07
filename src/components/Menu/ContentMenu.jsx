@@ -49,7 +49,7 @@ const ContentMenu = ({ onClickMenu = undefined }) => {
                 e.preventDefault();
                 onClickMenu && onClickMenu(menu.name);
                 setSelected(menu.name);
-                appContext.selectedProject = menu.name;
+                appContext.selectedContentView = menu.name;
               }}
               key={menu.name}
             >

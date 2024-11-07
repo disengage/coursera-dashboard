@@ -4,13 +4,20 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  content: ["./index.html", "./src/**/*.{html,js,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{html,js,jsx,tsx}",
+    "./node_modules/preline/dist/preline.js",
+  ],
   theme: {
     extend: {
       fontFamily: {
         sans: ["InterVariable", ...defaultTheme.fontFamily.sans],
       },
     },
+    container: {
+      center: true,
+    },
   },
-  plugins: [],
+  plugins: [require("preline/plugin")],
 };

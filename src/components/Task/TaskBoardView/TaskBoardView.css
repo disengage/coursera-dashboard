@@ -1,0 +1,8 @@
+.task-card .task-delete {
+  display: none;
+}
+
+.task-card:hover .task-delete {
+  display: flex;
+  cursor: pointer;
+}

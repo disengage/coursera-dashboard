@@ -4,7 +4,7 @@ import "./App.css";
 
 HSStaticMethods.autoInit();
 
-import TaskBoardView from "./components/Task/TaskBoardView";
+import TaskBoardView from "./components/Task/TaskBoardView/TaskBoardView";
 import TaskListView from "./components/Task/TaskListView";
 import ContentMenu from "./components/Menu/ContentMenu";
 import SidebarView from "./components/Sidebar/SidebarView";

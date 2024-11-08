@@ -49,6 +49,18 @@ export const AppContextProvider = ({ children }) => {
     setData({ ...data });
   };
 
+  const deleteTask = (index, status) => {
+    if (!data.tasks[selectedProject]) {
+      return;
+    }
+    const search = data.tasks[selectedProject]
+      .filter((task) => task.status === status)
+      .at(0);
+    const indexed = data.tasks[selectedProject].indexOf(search);
+    data.tasks[selectedProject].splice(indexed, 1);
+    setData({ ...data });
+  };
+
   const getDataCount = (status) => {
     const filtered = data.tasks[selectedProject] ?? [];
     const dataByStatus = filtered.filter((task) => task.status === status);
@@ -62,6 +74,7 @@ export const AppContextProvider = ({ children }) => {
         selectedContentView,
         data,
         addNewTask,
+        deleteTask,
         setProjectName,
         setContentViewType,
         getDataCount,

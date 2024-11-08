@@ -19,7 +19,7 @@ const ModalDeleteTask = ({ onClickDelete }) => {
         tabIndex="-1"
         aria-labelledby="hs-delete-modal-label"
       >
-        <div className="m-3 sm:mx-auto sm:w-full sm:max-w-lg">
+        <div className="m-3 mx-auto w-full max-w-lg">
           <div className="pointer-events-auto flex flex-col rounded-xl border bg-white shadow-sm">
             <div className="flex items-center justify-between border-b px-4 py-3">
               <h3

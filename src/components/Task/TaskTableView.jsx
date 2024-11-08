@@ -42,9 +42,9 @@ const TaskTableView = ({ status }) => {
     <div className="mx-8 mb-8 flex flex-col">
       <div className="-m-1.5 overflow-x-auto">
         <div className="inline-block min-w-full p-1.5 align-middle">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden rounded-lg border">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead>
+              <thead className="bg-gray-50">
                 <tr>
                   <th
                     scope="col"

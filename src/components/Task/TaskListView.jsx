@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
@@ -10,7 +12,11 @@ import {
 import TaskTableView from "./TaskTableView";
 import PropTypes from "prop-types";
 
+import { AppContext } from "../../providers/Contexts";
+
 const TaskListView = ({ visibility = true }) => {
+  const appContext = useContext(AppContext);
+
   const visibile = visibility ? "" : "hidden";
 
   const statusList = [
@@ -38,7 +44,10 @@ const TaskListView = ({ visibility = true }) => {
   ];
 
   return (
-    <div className={`${visibile} hs-accordion-group`}>
+    <div
+      className={`${visibile} hs-accordion-group`}
+      data-hs-accordion-always-open=""
+    >
       {statusList.map((menu, index) => {
         return (
           <div
@@ -47,17 +56,17 @@ const TaskListView = ({ visibility = true }) => {
             key={index}
           >
             <button
-              className="hs-accordion-toggle hs-accordion-active:text-blue-600 inline-flex w-full items-center gap-x-3 px-5 py-4 text-start font-semibold text-gray-800 hover:text-gray-500"
+              className="hs-accordion-toggle inline-flex w-full items-center gap-x-3 px-5 py-4 text-start font-semibold text-gray-800 hover:text-gray-500 hs-accordion-active:text-blue-600"
               aria-expanded="false"
               aria-controls={`hs-basic-bordered-collapse-${index}`}
             >
               <FontAwesomeIcon
                 icon={faCaretRight}
-                className="hs-accordion-active:hidden block size-4"
+                className="block size-4 hs-accordion-active:hidden"
               />
               <FontAwesomeIcon
                 icon={faCaretDown}
-                className="hs-accordion-active:block hidden size-4"
+                className="hidden size-4 hs-accordion-active:block"
               />
               <div>
                 <span
@@ -67,7 +76,7 @@ const TaskListView = ({ visibility = true }) => {
                     icon={menu.icon}
                     className="size-4 shrink-0"
                   />
-                  {menu.name}
+                  {`${menu.name} (${appContext.getDataCount(menu.status)})`}
                 </span>
               </div>
             </button>

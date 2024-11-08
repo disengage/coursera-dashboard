@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,23 +19,11 @@ const ContentMenu = ({ onClickMenu = undefined }) => {
 
   const appContext = useContext(AppContext);
 
-  const [current, setCurrent] = useState(appContext.selectedProject);
-  const [selected, setSelected] = useState(menuNamed[0].name);
-
   const defaultStyle = "text-gray-400 border-b";
   const activeStyle = "text-gray-800 border-b-2 border-neutral-500";
 
-  useEffect(() => {
-    // If the user changes project name from sidebar menu
-    // then reset main content tab to first tab
-    if (current !== appContext.selectedProject) {
-      setCurrent(appContext.selectedProject);
-      setSelected(menuNamed[0].name);
-    }
-  }, [appContext, current, menuNamed]);
-
   const setTextStyle = (key) => {
-    return key === selected ? activeStyle : defaultStyle;
+    return key === appContext.selectedContentView ? activeStyle : defaultStyle;
   };
 
   return (
@@ -48,8 +36,7 @@ const ContentMenu = ({ onClickMenu = undefined }) => {
               onClick={(e) => {
                 e.preventDefault();
                 onClickMenu && onClickMenu(menu.name);
-                setSelected(menu.name);
-                appContext.selectedContentView = menu.name;
+                appContext.setContentViewType(menu.name);
               }}
               key={menu.name}
             >

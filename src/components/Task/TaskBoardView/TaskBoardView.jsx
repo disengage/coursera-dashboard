@@ -92,13 +92,13 @@ const TaskBoardView = ({ visibility = true }) => {
               {data.map((task, index) => {
                 return (
                   <div
-                    className="task-card relative m-4 flex flex-col rounded-xl border bg-white p-4 shadow-sm md:p-5"
+                    className="task-card relative my-4 flex flex-col rounded-xl border bg-white p-4 shadow-sm"
                     key={`task-id-${task.id}`}
                   >
-                    <h3 className="truncate text-lg text-gray-800">
+                    <h3 className="mx-2 mt-3 whitespace-normal text-lg text-gray-800">
                       {task.name}
                     </h3>
-                    <p className="mt-1 truncate text-xs text-gray-400">
+                    <p className="mx-2 mb-3 mt-1 whitespace-normal text-xs text-gray-400">
                       {task.desc == "" ? "-" : task.desc}
                     </p>
                     <span
@@ -123,11 +123,14 @@ const TaskBoardView = ({ visibility = true }) => {
   return (
     <>
       <div
-        className={`${visibile} mt-4 size-full columns-3 gap-8 overflow-auto`}
+        className={`${visibile} mt-4 gap-8 sm:columns-1 md:columns-1 lg:columns-3 xl:columns-3 2xl:columns-3`}
       >
         {statusList.map((list, index) => {
           return (
-            <div className="flex h-full flex-col" key={index}>
+            <div
+              className="xs:h-fit mb-6 h-screen w-full rounded-lg sm:h-fit md:h-fit 2xl:mb-0"
+              key={index}
+            >
               <div className="flex flex-row bg-gray-100 p-2">
                 <div className="basis-3/4">
                   <span
@@ -145,13 +148,13 @@ const TaskBoardView = ({ visibility = true }) => {
                 </div>
               </div>
               <div
-                className="relative min-h-[126px] bg-gray-100 pb-[36px]"
+                className="relative min-h-[126px] bg-gray-100 px-4 pb-10 pt-[1px]"
                 id={list.status}
               >
                 {getData(list.status)}
                 <button
                   type="button"
-                  className="absolute inset-x-0 bottom-0 inline-flex w-full items-center gap-x-2 px-4 pb-4 text-sm text-gray-400"
+                  className="absolute inset-x-0 bottom-0 inline-flex w-full items-center gap-x-2 p-4 text-sm text-gray-400"
                   aria-haspopup="dialog"
                   aria-expanded="false"
                   aria-controls={`hs-basic-modal-${list.status}`}

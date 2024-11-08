@@ -8,43 +8,50 @@ import TaskBoardView from "./components/Task/TaskBoardView/TaskBoardView";
 import TaskListView from "./components/Task/TaskListView";
 import ContentMenu from "./components/Menu/ContentMenu";
 import SidebarView from "./components/Sidebar/SidebarView";
+import SidebarViewSM from "./components/Sidebar/SidebarView-sm";
 import NavBarMenu from "./components/Menu/NavBarMenu";
+import ScreenSizeHelper from "./components/Helper/ScreenSizeHelper";
 
 function App() {
   return (
     <>
-      <AppContext.Consumer>
-        {(appContext) => {
-          console.log(appContext);
-          return (
-            <div className="container relative mx-auto h-svh">
-              <div className="flex flex-row">
-                <div className="h-screen min-w-64 max-w-64 border border-neutral-200 bg-neutral-50 p-8">
+      <div className="xs:max-w-[100%] container relative mx-auto h-screen">
+        <div className="xs:flex-col sm:flex-col md:flex-col xl:flex 2xl:flex">
+          <AppContext.Consumer>
+            {(appContext) => {
+              console.log(appContext);
+              return (
+                <>
+                  <SidebarViewSM
+                    onClickMenu={(menu) => appContext.setProjectName(menu)}
+                  />
                   <SidebarView
                     onClickMenu={(menu) => appContext.setProjectName(menu)}
                   />
-                </div>
-                <div className="h-screen basis-full overflow-hidden border-r border-neutral-200 p-8">
-                  <NavBarMenu title={appContext.projectName} />
-                  <ContentMenu
-                    onClickMenu={(view) => appContext.setContentViewType(view)}
-                  />
-                  <TaskBoardView
-                    visibility={
-                      appContext.selectedContentView === "TaskBoardView"
-                    }
-                  />
-                  <TaskListView
-                    visibility={
-                      appContext.selectedContentView === "TaskListView"
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        }}
-      </AppContext.Consumer>
+                  <div className="m-8 min-h-svh grow border-neutral-200 max-sm:p-0">
+                    <NavBarMenu title={appContext.projectName} />
+                    <ContentMenu
+                      onClickMenu={(view) =>
+                        appContext.setContentViewType(view)
+                      }
+                    />
+                    <TaskBoardView
+                      visibility={
+                        appContext.selectedContentView === "TaskBoardView"
+                      }
+                    />
+                    <TaskListView
+                      visibility={
+                        appContext.selectedContentView === "TaskListView"
+                      }
+                    />
+                  </div>
+                </>
+              );
+            }}
+          </AppContext.Consumer>
+        </div>
+      </div>
     </>
   );
 }

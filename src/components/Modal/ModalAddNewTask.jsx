@@ -120,7 +120,7 @@ const ModalAddNewTask = ({ status }) => {
       role="dialog"
       tabIndex={-1}
     >
-      <div className="m-3 sm:mx-auto sm:w-full sm:max-w-lg">
+      <div className="m-3 mx-auto w-full max-w-lg">
         <div className="pointer-events-auto flex flex-col rounded-xl border bg-white shadow-sm">
           <div className="flex items-center border-b px-4 py-3">
             <h3 className="flex-none font-bold text-gray-800">New Task</h3>

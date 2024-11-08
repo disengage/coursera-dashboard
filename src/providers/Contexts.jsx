@@ -1,6 +1,7 @@
 /* eslint-disable */
-import PropTypes from "prop-types";
 import { createContext, useState, useRef } from "react";
+import PropTypes from "prop-types";
+import { v4 as uuidv4 } from "uuid";
 
 import mockupProject from "../data/mockup-projects.json";
 import mockupTask from "../data/mockup-tasks.json";
@@ -40,6 +41,7 @@ export const AppContextProvider = ({ children }) => {
       data.tasks[selectedProject] = [];
     }
     const task = {
+      id: uuidv4(),
       name,
       desc,
       status,
@@ -67,17 +69,33 @@ export const AppContextProvider = ({ children }) => {
     return dataByStatus.length;
   };
 
+  const updateTaskStatus = (id, status) => {
+    if (!data.tasks[selectedProject]) {
+      return;
+    }
+    const filtered = data.tasks[selectedProject].filter(
+      (task) => task.id === id,
+    );
+    if (filtered.length) {
+      const indexed = data.tasks[selectedProject].indexOf(filtered.at(0));
+      data.tasks[selectedProject][indexed].status = status;
+      setData({ ...data });
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
         selectedProject,
         selectedContentView,
         data,
+        setData,
         addNewTask,
         deleteTask,
         setProjectName,
         setContentViewType,
         getDataCount,
+        updateTaskStatus,
       }}
     >
       {children}

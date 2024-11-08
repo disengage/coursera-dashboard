@@ -47,7 +47,7 @@ const TaskListView = ({ visibility = true }) => {
       className={`${visibile} hs-accordion-group`}
       data-hs-accordion-always-open=""
     >
-      {statusList.map((menu, index) => {
+      {statusList.reverse().map((menu, index) => {
         return (
           <div
             className="hs-accordion mt-px-8 border first:rounded-t-lg last:rounded-b-lg"

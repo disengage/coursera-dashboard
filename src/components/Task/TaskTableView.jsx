@@ -6,6 +6,11 @@ const TaskTableView = ({ status }) => {
     return (
       <AppContext.Consumer>
         {(appContext) => {
+          if (appContext.selectedContentView != "TaskListView") {
+            // Avoid un-necessary re-render, Because consumer trigger every changes
+            return;
+          }
+
           const items = appContext.data.tasks[appContext.selectedProject] ?? [];
           const data = items.filter((item) => item.status === status) ?? [];
 

@@ -4,12 +4,7 @@ import { AppContext } from "../../providers/Contexts";
 import { HSOverlay } from "preline";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faXmark,
-  faCircleCheck,
-  faCircleDot,
-  faCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const ModalAddNewTask = ({ status }) => {
   const appContext = useContext(AppContext);
@@ -94,16 +89,14 @@ const ModalAddNewTask = ({ status }) => {
 
   const StatusBadge = () => {
     const statusList = [
-      { name: "TO DO", icon: faCircle, color: "bg-gray-600", status: "todo" },
+      { name: "TO DO", color: "bg-gray-600", status: "todo" },
       {
         name: "IN PROGRESS",
-        icon: faCircleDot,
         color: "bg-blue-600",
         status: "inprogress",
       },
       {
         name: "COMPLETE",
-        icon: faCircleCheck,
         color: "bg-teal-800",
         status: "complete",
       },
@@ -114,7 +107,6 @@ const ModalAddNewTask = ({ status }) => {
         <span
           className={`m-2 inline-flex items-center gap-x-1 rounded-full ${list.color} px-2 py-1 text-xs text-white`}
         >
-          <FontAwesomeIcon icon={list.icon} className="size-4 shrink-0" />
           {list.name}
         </span>
       </div>

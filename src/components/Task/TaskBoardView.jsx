@@ -1,5 +1,7 @@
 import { useContext } from "react";
+import PropTypes from "prop-types";
 import { AppContext } from "../../providers/Contexts";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
@@ -7,7 +9,7 @@ import {
   faCircle,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from "prop-types";
+
 import ModalAddNewTask from "../Modal/ModalAddNewTask";
 
 const TaskBoardView = ({ visibility = true }) => {

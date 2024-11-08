@@ -21,19 +21,13 @@ function App() {
               <div className="flex flex-row">
                 <div className="h-screen min-w-64 max-w-64 border border-neutral-200 bg-neutral-50 p-8">
                   <SidebarView
-                    onClickMenu={(menu) => {
-                      // Update app context data
-                      appContext.setProjectName(menu);
-                    }}
+                    onClickMenu={(menu) => appContext.setProjectName(menu)}
                   />
                 </div>
                 <div className="h-screen basis-full overflow-hidden border-r border-neutral-200 p-8">
                   <NavBarMenu title={appContext.projectName} />
                   <ContentMenu
-                    onClickMenu={(view) => {
-                      // Update app context data
-                      appContext.setContentViewType(view);
-                    }}
+                    onClickMenu={(view) => appContext.setContentViewType(view)}
                   />
                   <TaskBoardView
                     visibility={

@@ -1,9 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
-
-import PropTypes from "prop-types";
 import { useContext, useState } from "react";
 import { AppContext } from "../../providers/Contexts";
+import PropTypes from "prop-types";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
 
 const SidebarMenu = ({ onClickMenu = undefined }) => {
   const defaultStyle = "text-gray-400";

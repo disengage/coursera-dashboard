@@ -1,4 +1,5 @@
 import { useContext, useMemo } from "react";
+import { AppContext } from "../../providers/Contexts";
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +7,6 @@ import {
   faChartSimple,
   faBarsStaggered,
 } from "@fortawesome/free-solid-svg-icons";
-import { AppContext } from "../../providers/Contexts";
 
 const ContentMenu = ({ onClickMenu = undefined }) => {
   const menuNamed = useMemo(

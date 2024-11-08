@@ -1,4 +1,6 @@
 import { useContext } from "react";
+import PropTypes from "prop-types";
+import { AppContext } from "../../providers/Contexts";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,9 +12,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import TaskTableView from "./TaskTableView";
-import PropTypes from "prop-types";
-
-import { AppContext } from "../../providers/Contexts";
 
 const TaskListView = ({ visibility = true }) => {
   const appContext = useContext(AppContext);

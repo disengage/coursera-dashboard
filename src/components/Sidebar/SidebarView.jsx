@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronUp,
@@ -6,7 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import SidebarMenu from "./SidebarMenu";
-import PropTypes from "prop-types";
 
 const SidebarView = ({ onClickMenu = undefined }) => {
   return (
@@ -24,11 +25,11 @@ const SidebarView = ({ onClickMenu = undefined }) => {
           <div className="ml-2 w-full font-semibold">Workspace</div>
           <FontAwesomeIcon
             icon={faChevronUp}
-            className="hs-accordion-active:hidden block size-4"
+            className="block size-4 hs-accordion-active:hidden"
           />
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="hs-accordion-active:block hidden size-4"
+            className="hidden size-4 hs-accordion-active:block"
           />
         </button>
         <div

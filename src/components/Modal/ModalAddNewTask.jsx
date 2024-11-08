@@ -1,4 +1,8 @@
 import { useContext, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import { AppContext } from "../../providers/Contexts";
+import { HSOverlay } from "preline";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
@@ -6,9 +10,6 @@ import {
   faCircleDot,
   faCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { HSOverlay } from "preline";
-import { AppContext } from "../../providers/Contexts";
-import PropTypes from "prop-types";
 
 const ModalAddNewTask = ({ status }) => {
   const appContext = useContext(AppContext);

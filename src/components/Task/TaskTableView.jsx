@@ -1,5 +1,5 @@
-import { AppContext } from "../../providers/Contexts";
 import PropTypes from "prop-types";
+import { AppContext } from "../../providers/Contexts";
 
 const TaskTableView = ({ status }) => {
   const getData = () => {

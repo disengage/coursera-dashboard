@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "yarn watch:css & vite",
+    "dev": "yarn watch:css & vite --host",
     "build": "yarn build:css & vite build",
     "lint": "eslint .",
     "preview": "vite preview",

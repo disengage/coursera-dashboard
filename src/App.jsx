@@ -10,7 +10,7 @@ import ContentMenu from "./components/Menu/ContentMenu";
 import SidebarView from "./components/Sidebar/SidebarView";
 import SidebarViewSM from "./components/Sidebar/SidebarView-sm";
 import NavBarMenu from "./components/Menu/NavBarMenu";
-import ScreenSizeHelper from "./components/Helper/ScreenSizeHelper";
+// import ScreenSizeHelper from "./components/Helper/ScreenSizeHelper";
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
                   <SidebarView
                     onClickMenu={(menu) => appContext.setProjectName(menu)}
                   />
-                  <div className="m-8 min-h-svh grow border-neutral-200 max-sm:p-0">
+                  <div className="mb-10 min-h-svh grow border-neutral-200 p-8 pb-10 max-sm:p-0">
                     <NavBarMenu title={appContext.projectName} />
                     <ContentMenu
                       onClickMenu={(view) =>
@@ -50,6 +50,7 @@ function App() {
               );
             }}
           </AppContext.Consumer>
+          {/* <ScreenSizeHelper /> */}
         </div>
       </div>
     </>

@@ -103,7 +103,7 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
         <div className="pointer-events-auto flex flex-col rounded-xl border bg-white shadow-sm">
           <div className="flex items-center border-b px-4 py-3">
             <h3 className="flex-none font-bold text-gray-800">{modalTitle}</h3>
-            <div className="grow">
+            <div className="grow" id={taskStatus}>
               <span
                 className={`m-2 inline-flex items-center gap-x-1 rounded-full ${statusBadge.color} px-2 py-1 text-xs text-white`}
               >

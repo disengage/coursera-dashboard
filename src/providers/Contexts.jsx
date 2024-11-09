@@ -21,7 +21,7 @@ export const AppContextProvider = ({ children }) => {
 
   // Start app with initial state
   const initialState = {
-    selectedProject: "Project#1",
+    selectedProject: mockupProject.projects[0],
     selectedContentView: "TaskBoardView",
   };
 

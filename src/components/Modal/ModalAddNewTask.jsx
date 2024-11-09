@@ -31,6 +31,24 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
   const modalTitle = editMode ? "Edit Task" : "New Task";
   const modalBtn = editMode ? "Save" : "Add";
 
+  const statusList = [
+    { name: "TO DO", color: "bg-gray-600", status: "todo" },
+    {
+      name: "IN PROGRESS",
+      color: "bg-blue-600",
+      status: "inprogress",
+    },
+    {
+      name: "COMPLETE",
+      color: "bg-teal-800",
+      status: "complete",
+    },
+  ];
+  let statusBadge = statusList[0];
+  if (taskStatus) {
+    statusBadge = statusList.filter((list) => list.status === taskStatus)[0];
+  }
+
   useEffect(() => {
     if (!initialView.current && editMode && editData) {
       console.log(editData);
@@ -74,35 +92,6 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
     initialView.current = false;
   };
 
-  const StatusBadge = () => {
-    const statusList = [
-      { name: "TO DO", color: "bg-gray-600", status: "todo" },
-      {
-        name: "IN PROGRESS",
-        color: "bg-blue-600",
-        status: "inprogress",
-      },
-      {
-        name: "COMPLETE",
-        color: "bg-teal-800",
-        status: "complete",
-      },
-    ];
-    const list = statusList.filter((list) => list.status === taskStatus)[0];
-    if (!list) {
-      return <></>;
-    }
-    return (
-      <div className="grow">
-        <span
-          className={`m-2 inline-flex items-center gap-x-1 rounded-full ${list.color} px-2 py-1 text-xs text-white`}
-        >
-          {list.name}
-        </span>
-      </div>
-    );
-  };
-
   return (
     <div
       id={modalName}
@@ -114,7 +103,13 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
         <div className="pointer-events-auto flex flex-col rounded-xl border bg-white shadow-sm">
           <div className="flex items-center border-b px-4 py-3">
             <h3 className="flex-none font-bold text-gray-800">{modalTitle}</h3>
-            <StatusBadge />
+            <div className="grow">
+              <span
+                className={`m-2 inline-flex items-center gap-x-1 rounded-full ${statusBadge.color} px-2 py-1 text-xs text-white`}
+              >
+                {statusBadge.name}
+              </span>
+            </div>
             <button
               type="button"
               className="inline-flex size-8 flex-none items-center justify-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none"

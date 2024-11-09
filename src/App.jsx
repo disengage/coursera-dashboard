@@ -10,6 +10,7 @@ import ContentMenu from "./components/Menu/ContentMenu";
 import SidebarView from "./components/Sidebar/SidebarView";
 import SidebarViewSM from "./components/Sidebar/SidebarView-sm";
 import NavBarMenu from "./components/Menu/NavBarMenu";
+import ModalAddNewTask from "./components/Modal/ModalAddNewTask";
 // import ScreenSizeHelper from "./components/Helper/ScreenSizeHelper";
 
 function App() {
@@ -46,6 +47,10 @@ function App() {
                       }
                     />
                   </div>
+                  <ModalAddNewTask
+                    editMode={true}
+                    editData={appContext.editingTask}
+                  />
                 </>
               );
             }}

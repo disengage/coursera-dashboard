@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AppContext } from "../../providers/Contexts";
 import { HSOverlay } from "preline";
@@ -7,16 +7,18 @@ import DueDatePicker from "./DueDatePicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-const ModalAddNewTask = ({ status }) => {
+const ModalAddNewTask = ({ status, editMode, editData }) => {
   const appContext = useContext(AppContext);
 
-  const txtTaskNameRef = useRef();
-  const txtTaskDateRef = useRef();
-  const txtTaskDescRef = useRef();
+  const datePickerRef = useRef();
 
-  const [editDate, setEditDate] = useState("");
+  const [taskStatus, setTaskStatus] = useState(status);
+  const [id, setId] = useState();
   const [editName, setEditName] = useState("");
+  const [editDate, setEditDate] = useState("");
   const [editDesc, setEditDesc] = useState("");
+
+  const initialView = useRef(false);
 
   const borderStyle = {
     nornal: "border-gray-200 focus:border-blue-500 focus:ring-blue-500",
@@ -25,17 +27,39 @@ const ModalAddNewTask = ({ status }) => {
 
   const [txtTaskNameStyle, setTxtTaskNameStyle] = useState(borderStyle.nornal);
 
-  const validateInput = (e) => {
-    const name = txtTaskNameRef.current?.value ?? "";
-    const date = txtTaskDateRef.current.getSelected();
-    const desc = txtTaskDescRef.current?.value ?? "";
-    if (name !== "" && date !== "") {
+  const modalName = editMode ? "hs-edit-modal" : `hs-basic-modal-${status}`;
+  const modalTitle = editMode ? "Edit Task" : "New Task";
+  const modalBtn = editMode ? "Save" : "Add";
+
+  useEffect(() => {
+    if (!initialView.current && editMode && editData) {
+      console.log(editData);
+      initialView.current = true;
+      setId(editData.id);
+      setTaskStatus(editData.status);
+      setEditName(editData.name);
+      setEditDate(editData.dueDate);
+      setEditDesc(editData.desc);
+      datePickerRef.current.setSelected(editData.dueDate);
+    }
+  }, [appContext.editingTask, editData, editMode]);
+
+  const validateInput = (close) => {
+    const name = editName;
+    const dueDate = datePickerRef.current.getSelected();
+    const desc = editDesc;
+    const isClose = typeof close == "boolean" && close;
+    if (name !== "" && dueDate !== "" && isClose) {
+      if (editMode) {
+        appContext.editTask({ id, name, desc, status: taskStatus, dueDate });
+      } else {
+        appContext.addNewTask({ name, desc, status: taskStatus, dueDate });
+      }
+      HSOverlay.close(document.querySelector(`#${modalName}`));
       resetInput();
-      appContext.addNewTask({ name, desc, status, date });
-      HSOverlay.close(document.querySelector(`#hs-basic-modal-${status}`));
     } else {
       setTxtTaskNameStyle(name === "" ? borderStyle.error : borderStyle.nornal);
-      txtTaskDateRef.current?.isInvalid(date === "");
+      datePickerRef.current?.isInvalid(dueDate === "");
     }
   };
 
@@ -44,8 +68,10 @@ const ModalAddNewTask = ({ status }) => {
     setEditDate("");
     setEditDesc("");
     setTxtTaskNameStyle(borderStyle.nornal);
-    txtTaskDateRef.current.isInvalid(false);
-    txtTaskDateRef.current.reset();
+    datePickerRef.current.isInvalid(false);
+    datePickerRef.current.reset();
+    appContext.setEditingTaskId(undefined);
+    initialView.current = false;
   };
 
   const StatusBadge = () => {
@@ -62,7 +88,10 @@ const ModalAddNewTask = ({ status }) => {
         status: "complete",
       },
     ];
-    const list = statusList.filter((list) => list.status === status)[0];
+    const list = statusList.filter((list) => list.status === taskStatus)[0];
+    if (!list) {
+      return <></>;
+    }
     return (
       <div className="grow">
         <span
@@ -76,7 +105,7 @@ const ModalAddNewTask = ({ status }) => {
 
   return (
     <div
-      id={`hs-basic-modal-${status}`}
+      id={modalName}
       className="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500"
       role="dialog"
       tabIndex={-1}
@@ -84,13 +113,13 @@ const ModalAddNewTask = ({ status }) => {
       <div className="m-3 mx-auto w-full max-w-lg">
         <div className="pointer-events-auto flex flex-col rounded-xl border bg-white shadow-sm">
           <div className="flex items-center border-b px-4 py-3">
-            <h3 className="flex-none font-bold text-gray-800">New Task</h3>
+            <h3 className="flex-none font-bold text-gray-800">{modalTitle}</h3>
             <StatusBadge />
             <button
               type="button"
               className="inline-flex size-8 flex-none items-center justify-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none"
               aria-label="Close"
-              data-hs-overlay={`#hs-basic-modal-${status}`}
+              data-hs-overlay={`#${modalName}`}
             >
               <span className="sr-only">Close</span>
               <FontAwesomeIcon icon={faXmark} className="size-4 shrink-0" />
@@ -111,10 +140,9 @@ const ModalAddNewTask = ({ status }) => {
                 id="with-corner-hint"
                 className={`${txtTaskNameStyle} block w-full rounded-lg border px-4 py-3 text-sm`}
                 placeholder="..."
-                ref={txtTaskNameRef}
                 required={true}
                 onChange={(e) => setEditName(e.target.value)}
-                onBlur={(e) => validateInput(e)}
+                onBlur={validateInput}
                 value={editName}
               />
               {txtTaskNameStyle == borderStyle.error ? (
@@ -139,7 +167,8 @@ const ModalAddNewTask = ({ status }) => {
               </div>
               <DueDatePicker
                 value={editDate}
-                ref={txtTaskDateRef}
+                ref={datePickerRef}
+                min={editDate}
                 onChanged={(value) => setEditDate(value)}
                 onValid={(value) => setEditDate(value)}
               />
@@ -157,10 +186,9 @@ const ModalAddNewTask = ({ status }) => {
                 rows={3}
                 placeholder="..."
                 aria-describedby="hs-textarea-helper-text"
-                ref={txtTaskDescRef}
                 onChange={(e) => setEditDesc(e.target.value)}
                 value={editDesc}
-                onBlur={(e) => validateInput(e)}
+                onBlur={validateInput}
               ></textarea>
               <p
                 className="mt-2 text-xs text-gray-500"
@@ -174,14 +202,14 @@ const ModalAddNewTask = ({ status }) => {
             <button
               type="button"
               className="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:bg-blue-700 focus:outline-none"
-              onClick={validateInput}
+              onClick={() => validateInput(true)}
             >
-              Add
+              {modalBtn}
             </button>
             <button
               type="button"
               className="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
-              data-hs-overlay={`#hs-basic-modal-${status}`}
+              data-hs-overlay={`#${modalName}`}
               onClick={() => resetInput()}
             >
               Cancel
@@ -194,7 +222,9 @@ const ModalAddNewTask = ({ status }) => {
 };
 
 ModalAddNewTask.propTypes = {
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
+  editMode: PropTypes.bool,
+  editData: PropTypes.object,
 };
 
 export default ModalAddNewTask;

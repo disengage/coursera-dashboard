@@ -13,12 +13,12 @@ import PropTypes from "prop-types";
 dayjs.extend(isSameOrAfter);
 
 const DueDatePicker = forwardRef(function DueDatePicker(
-  { value, onChanged, onValid },
+  { value, onChanged, onValid, min },
   ref,
 ) {
   const datePicker = useRef();
   const [error, setError] = useState();
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(value);
   const appContext = useContext(AppContext);
 
   const errorStyle = "border-red-500 focus:border-red-500 focus:ring-red-500";
@@ -28,11 +28,13 @@ const DueDatePicker = forwardRef(function DueDatePicker(
     isInvalid: (enabled) => {
       setError(enabled ? errorMessage.invalid : errorMessage.none);
     },
+    setSelected: (date) => {
+      setSelectedDate(date);
+    },
     getSelected: () => {
       return selectedDate;
     },
     reset: () => {
-      datePicker.current = "";
       setError(errorMessage.none);
       setSelectedDate("");
       onChanged("");
@@ -40,7 +42,10 @@ const DueDatePicker = forwardRef(function DueDatePicker(
     },
   }));
 
-  let minDate = appContext.dayjsToday;
+  let minDate = dayjs(min != "" ? min : appContext.dayjsToday);
+  if (dayjs(min) > appContext.dayjsToday) {
+    minDate = appContext.dayjsToday;
+  }
   const maxDate = minDate.add(1, "year");
 
   const errorMessage = {
@@ -100,6 +105,7 @@ DueDatePicker.propTypes = {
   value: PropTypes.string,
   onChanged: PropTypes.func,
   onValid: PropTypes.func,
+  min: PropTypes.string,
 };
 
 export default DueDatePicker;

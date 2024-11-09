@@ -16,6 +16,7 @@ import {
   faCircle,
   faPlus,
   faTrash,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 import ModalAddNewTask from "../../Modal/ModalAddNewTask";
@@ -26,10 +27,7 @@ const TaskBoardView = ({ visibility = true }) => {
   const visibile = visibility ? "" : "hidden";
 
   const appContext = useContext(AppContext);
-  const requestDeleteRef = useRef({
-    index: 0,
-    status: undefined,
-  });
+  const requestDeleteRef = useRef();
 
   const statusList = [
     { name: "TO DO", icon: faCircle, color: "bg-gray-600", status: "todo" },
@@ -47,17 +45,19 @@ const TaskBoardView = ({ visibility = true }) => {
     },
   ];
 
-  const deleteTask = (index, status) => {
-    requestDeleteRef.current = { index, status };
+  const deleteTask = (id) => {
+    requestDeleteRef.current = id;
     HSOverlay.open(document.querySelector("#hs-delete-modal"));
+  };
+
+  const editTask = (index) => {
+    appContext.setEditingTaskId(index);
+    HSOverlay.open(document.querySelector("#hs-edit-modal"));
   };
 
   const onClickDeleteTask = () => {
     if (requestDeleteRef.current) {
-      appContext.deleteTask(
-        requestDeleteRef.current.index,
-        requestDeleteRef.current.status,
-      );
+      appContext.deleteTask(requestDeleteRef.current);
       requestDeleteRef.current = undefined;
     }
   };
@@ -93,7 +93,7 @@ const TaskBoardView = ({ visibility = true }) => {
 
           return (
             <SortableWrapper list={data} onEnd={onEndCardDrag}>
-              {data.map((task, index) => {
+              {data.map((task) => {
                 const dueDate = dayjs(task.dueDate);
                 const dayLeft = dayjs(dueDate).from(appContext.dayjsToday);
                 return (
@@ -109,17 +109,24 @@ const TaskBoardView = ({ visibility = true }) => {
                         <div className="flex-auto">
                           Due Date: {dayjs(dueDate).format("D MMM YYYY")}
                         </div>
-                        <div className="flex-none">
-                          {task.status == "complete" ? "" : dayLeft}
-                        </div>
+                        <div className="flex-none">{dayLeft}</div>
                       </div>
                     </div>
                     <span
                       className="task-delete absolute right-2 top-2 inline-flex size-[40px] items-center justify-center rounded-full border-4 border-red-100 bg-red-200 text-red-800"
-                      onClick={() => deleteTask(index, status)}
+                      onClick={() => deleteTask(task.id)}
                     >
                       <FontAwesomeIcon
                         icon={faTrash}
+                        className="size-3.5 shrink-0"
+                      />
+                    </span>
+                    <span
+                      className="task-edit absolute right-2 top-2 inline-flex size-[40px] items-center justify-center rounded-full border-4 border-green-100 bg-green-200 text-green-800"
+                      onClick={() => editTask(task.id)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
                         className="size-3.5 shrink-0"
                       />
                     </span>

@@ -18,6 +18,7 @@ export const AppContextProvider = ({ children }) => {
     projects: [],
     tasks: {},
   });
+  const [editingTask, setEditingTask] = useState();
 
   // Start app with initial state
   const initialState = {
@@ -37,7 +38,7 @@ export const AppContextProvider = ({ children }) => {
     isInit.current = true;
   }
 
-  const addNewTask = ({ name, desc, status, date }) => {
+  const addNewTask = ({ name, desc, status, dueDate }) => {
     if (!data.tasks[selectedProject]) {
       data.tasks[selectedProject] = [];
     }
@@ -46,23 +47,25 @@ export const AppContextProvider = ({ children }) => {
       name,
       desc,
       status,
-      dueDate: date,
+      dueDate,
     };
     console.log(task);
     data.tasks[selectedProject].push(task);
     setData({ ...data });
   };
 
-  const deleteTask = (index, status) => {
+  const deleteTask = (id) => {
     if (!data.tasks[selectedProject]) {
       return;
     }
-    const search = data.tasks[selectedProject]
-      .filter((task) => task.status === status)
-      .at(0);
-    const indexed = data.tasks[selectedProject].indexOf(search);
-    data.tasks[selectedProject].splice(indexed, 1);
-    setData({ ...data });
+    const filtered = data.tasks[selectedProject].filter(
+      (task) => task.id === id,
+    );
+    if (filtered.length) {
+      const indexed = data.tasks[selectedProject].indexOf(filtered.at(0));
+      data.tasks[selectedProject].splice(indexed, 1);
+      setData({ ...data });
+    }
   };
 
   const getDataCount = (status) => {
@@ -85,6 +88,36 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  const setEditingTaskId = (id) => {
+    if (!data.tasks[selectedProject]) {
+      return;
+    }
+    if (!id) {
+      setEditingTask(undefined);
+      return;
+    }
+    const filtered = data.tasks[selectedProject].filter(
+      (task) => task.id === id,
+    );
+    if (filtered.length) {
+      setEditingTask(filtered.at(0));
+    }
+  };
+
+  const editTask = (task) => {
+    if (!data.tasks[selectedProject]) {
+      return;
+    }
+    const filtered = data.tasks[selectedProject].filter(
+      (search) => search.id === task.id,
+    );
+    if (filtered.length) {
+      const indexed = data.tasks[selectedProject].indexOf(filtered.at(0));
+      data.tasks[selectedProject][indexed] = task;
+      setData({ ...data });
+    }
+  };
+
   let today = dayjs();
   today = today.hour(0);
   today = today.minute(0);
@@ -99,12 +132,15 @@ export const AppContextProvider = ({ children }) => {
         data,
         setData,
         addNewTask,
+        editTask,
         deleteTask,
         setProjectName,
         setContentViewType,
         getDataCount,
         updateTaskStatus,
         dayjsToday: today,
+        editingTask,
+        setEditingTaskId,
       }}
     >
       {children}

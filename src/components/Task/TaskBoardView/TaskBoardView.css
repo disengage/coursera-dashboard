@@ -1,8 +1,20 @@
 .task-card .task-delete {
   display: none;
+  zoom: 0.9;
 }
 
 .task-card:hover .task-delete {
+  display: flex;
+  cursor: pointer;
+}
+
+.task-card .task-edit {
+  display: none;
+  zoom: 0.9;
+  top: 52px;
+}
+
+.task-card:hover .task-edit {
   display: flex;
   cursor: pointer;
 }

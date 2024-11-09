@@ -8,10 +8,14 @@ import {
   useContext,
 } from "react";
 import { AppContext } from "../../providers/Contexts";
+import PropTypes from "prop-types";
 
 dayjs.extend(isSameOrAfter);
 
-const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
+const DueDatePicker = forwardRef(function DueDatePicker(
+  { value, onChanged, onValid },
+  ref,
+) {
   const datePicker = useRef();
   const [error, setError] = useState();
   const [selectedDate, setSelectedDate] = useState("");
@@ -27,6 +31,13 @@ const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
     getSelected: () => {
       return selectedDate;
     },
+    reset: () => {
+      datePicker.current = "";
+      setError(errorMessage.none);
+      setSelectedDate("");
+      onChanged("");
+      onValid("");
+    },
   }));
 
   let minDate = appContext.dayjsToday;
@@ -39,6 +50,7 @@ const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
   };
 
   const validateChange = () => {
+    onChanged(datePicker.current.value);
     const parseDate = dayjs(datePicker.current.value, "YYYY-MM-DD");
     if (!parseDate.isValid() || parseDate.isBefore(minDate)) {
       setError(errorMessage.invalid);
@@ -47,7 +59,9 @@ const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
     }
     if (parseDate.isSameOrAfter(minDate) && parseDate.isBefore(maxDate)) {
       setError(errorMessage.none);
-      setSelectedDate(parseDate.format("YYYY-MM-DD"));
+      const parseValue = parseDate.format("YYYY-MM-DD");
+      setSelectedDate(parseValue);
+      onValid(parseValue);
     } else {
       setError(errorMessage.tooLong);
       setSelectedDate("");
@@ -60,11 +74,13 @@ const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
         type="date"
         id="start"
         name="trip-start"
+        value={value}
         min={minDate.format("YYYY-MM-DD")}
         className={`${error ? errorStyle : ""} block w-full rounded-lg border px-4 py-3 text-sm`}
         placeholder="..."
         onChange={validateChange}
         ref={datePicker}
+        onBlur={validateChange}
       />
       {error ? (
         <p
@@ -79,5 +95,11 @@ const DueDatePicker = forwardRef(function DueDatePicker(props, ref) {
     </>
   );
 });
+
+DueDatePicker.propTypes = {
+  value: PropTypes.string,
+  onChanged: PropTypes.func,
+  onValid: PropTypes.func,
+};
 
 export default DueDatePicker;

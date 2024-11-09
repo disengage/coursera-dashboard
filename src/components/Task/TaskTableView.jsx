@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { AppContext } from "../../providers/Contexts";
+import dayjs from "dayjs";
 
 const TaskTableView = ({ status }) => {
   const getData = () => {
@@ -17,10 +18,13 @@ const TaskTableView = ({ status }) => {
           if (data.length) {
             return data.map((data, index) => (
               <tr key={index}>
-                <td className="whitespace-nowrap px-6 py-4 text-sm">
+                <td className="whitespace-nowrap px-6 py-4 align-top text-sm">
+                  {dayjs(data.dueDate).format("D MMM YYYY")}
+                </td>
+                <td className="whitespace-nowrap text-wrap px-6 py-4 align-top text-sm">
                   {data.name}
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm">
+                <td className="whitespace-nowrap text-wrap px-6 py-4 align-top text-sm">
                   {data.desc}
                 </td>
               </tr>
@@ -28,6 +32,7 @@ const TaskTableView = ({ status }) => {
           } else {
             return (
               <tr>
+                <td className="whitespace-nowrap px-6 py-4 text-gray-300">-</td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-300">-</td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-300">-</td>
               </tr>
@@ -43,12 +48,18 @@ const TaskTableView = ({ status }) => {
       <div className="-m-1.5 overflow-x-auto">
         <div className="inline-block min-w-full p-1.5 align-middle">
           <div className="overflow-hidden rounded-lg border">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full table-fixed divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500"
+                    className="w-[120px] px-6 py-3 text-start text-xs font-medium text-gray-500"
+                  >
+                    Due Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="w-[400px] px-6 py-3 text-start text-xs font-medium text-gray-500"
                   >
                     Task
                   </th>

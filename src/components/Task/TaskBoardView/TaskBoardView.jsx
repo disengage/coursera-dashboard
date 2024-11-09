@@ -2,6 +2,10 @@ import { useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { AppContext } from "../../../providers/Contexts";
 import { HSOverlay } from "preline";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 import "./TaskBoardView.css";
 
@@ -90,17 +94,26 @@ const TaskBoardView = ({ visibility = true }) => {
           return (
             <SortableWrapper list={data} onEnd={onEndCardDrag}>
               {data.map((task, index) => {
+                const dueDate = dayjs(task.dueDate);
+                const dayLeft = dayjs(dueDate).from(appContext.dayjsToday);
                 return (
                   <div
                     className="task-card relative my-4 flex flex-col rounded-xl border bg-white p-4 shadow-sm"
                     key={`task-id-${task.id}`}
                   >
-                    <h3 className="mx-2 mt-3 whitespace-normal text-lg text-gray-800">
+                    <h3 className="mx-2 mt-2 whitespace-normal text-lg text-gray-800">
                       {task.name}
                     </h3>
-                    <p className="mx-2 mb-3 mt-1 whitespace-normal text-xs text-gray-400">
-                      {task.desc == "" ? "-" : task.desc}
-                    </p>
+                    <div className="mx-2 mb-2 mt-1 whitespace-normal text-sm text-gray-400">
+                      <div className="flex">
+                        <div className="flex-auto">
+                          Due Date: {dayjs(dueDate).format("D MMM YYYY")}
+                        </div>
+                        <div className="flex-none">
+                          {task.status == "complete" ? "" : dayLeft}
+                        </div>
+                      </div>
+                    </div>
                     <span
                       className="task-delete absolute right-2 top-2 inline-flex size-[40px] items-center justify-center rounded-full border-4 border-red-100 bg-red-200 text-red-800"
                       onClick={() => deleteTask(index, status)}

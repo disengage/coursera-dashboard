@@ -2,6 +2,7 @@ import { useContext, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { AppContext } from "../../providers/Contexts";
 import { HSOverlay } from "preline";
+import DueDatePicker from "./DueDatePicker";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -9,8 +10,9 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 const ModalAddNewTask = ({ status }) => {
   const appContext = useContext(AppContext);
 
-  const txtTaskNameRef = useRef(undefined);
-  const txtTaskDescRef = useRef(undefined);
+  const txtTaskNameRef = useRef();
+  const txtTaskDateRef = useRef();
+  const txtTaskDescRef = useRef();
 
   const borderStyle = {
     nornal: "border-gray-200 focus:border-blue-500 focus:ring-blue-500",
@@ -20,18 +22,28 @@ const ModalAddNewTask = ({ status }) => {
   const [txtTaskNameStyle, setTxtTaskNameStyle] = useState(borderStyle.nornal);
 
   const validateInput = () => {
-    const name = txtTaskNameRef.current.value;
-    const desc = txtTaskDescRef.current.value;
-    setTxtTaskNameStyle(name === "" ? borderStyle.error : borderStyle.nornal);
-    txtTaskNameRef.current.value = name;
-    if (name !== "") {
-      try {
-        appContext.addNewTask({ name, desc, status });
-        HSOverlay.close(document.querySelector(`#hs-basic-modal-${status}`));
-      } catch (error) {
-        alert(error);
+    const name = txtTaskNameRef.current?.value ?? "";
+    const date = txtTaskDateRef.current.getSelected();
+    const desc = txtTaskDescRef.current?.value ?? "";
+
+    if (name !== "" && date !== "") {
+      setTxtTaskNameStyle(borderStyle.nornal);
+      txtTaskDateRef.current.isInvalid(false);
+      appContext.addNewTask({ name, desc, status, date });
+      HSOverlay.close(document.querySelector(`#hs-basic-modal-${status}`));
+    } else {
+      if (date === "") {
+        txtTaskDateRef.current?.isInvalid(true);
+      }
+      if (name === "") {
+        setTxtTaskNameStyle(borderStyle.error);
       }
     }
+  };
+
+  const onTaskNameChange = () => {
+    const name = txtTaskNameRef.current.value;
+    setTxtTaskNameStyle(name === "" ? borderStyle.error : borderStyle.nornal);
   };
 
   const InputForm = () => {
@@ -49,17 +61,33 @@ const ModalAddNewTask = ({ status }) => {
           <input
             type="text"
             id="with-corner-hint"
-            className="block w-full rounded-lg border px-4 py-3 text-sm"
+            className={`${txtTaskNameStyle} block w-full rounded-lg border px-4 py-3 text-sm`}
             placeholder="..."
             ref={txtTaskNameRef}
             required={true}
+            onChange={onTaskNameChange}
           />
-          <p
-            className="mt-2 text-sm text-red-600"
-            hidden={txtTaskNameStyle !== borderStyle.error}
-          >
-            Task name can't be empty.
-          </p>
+          {txtTaskNameStyle == borderStyle.error ? (
+            <p className="mt-2 text-sm text-red-600">
+              {"Task name can't be empty."}
+            </p>
+          ) : (
+            <></>
+          )}
+        </div>
+        <div className="max-w mt-4">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="with-corner-hint"
+              className="mb-2 block text-sm font-medium"
+            >
+              Due Date
+            </label>
+            <span className="mb-2 block text-xs text-gray-400">
+              Select a date from today and within 1 year.
+            </span>
+          </div>
+          <DueDatePicker ref={txtTaskDateRef} />
         </div>
         <div className="max-w mt-4">
           <label

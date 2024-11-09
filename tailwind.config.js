@@ -4,10 +4,12 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  darkMode: "selector",
   content: [
     "./index.html",
     "./src/**/*.{html,js,jsx,tsx}",
     "./node_modules/preline/dist/preline.js",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.{js,ts}",
   ],
   theme: {
     screens: {

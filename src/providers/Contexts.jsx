@@ -2,6 +2,7 @@
 import { createContext, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 
 import mockupProject from "../data/mockup-projects.json";
 import mockupTask from "../data/mockup-tasks.json";
@@ -36,7 +37,7 @@ export const AppContextProvider = ({ children }) => {
     isInit.current = true;
   }
 
-  const addNewTask = ({ name, desc, status }) => {
+  const addNewTask = ({ name, desc, status, date }) => {
     if (!data.tasks[selectedProject]) {
       data.tasks[selectedProject] = [];
     }
@@ -45,6 +46,7 @@ export const AppContextProvider = ({ children }) => {
       name,
       desc,
       status,
+      dueDate: date,
     };
     console.log(task);
     data.tasks[selectedProject].push(task);
@@ -83,6 +85,12 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  let today = dayjs();
+  today = today.hour(0);
+  today = today.minute(0);
+  today = today.second(0);
+  today = today.millisecond(0);
+
   return (
     <AppContext.Provider
       value={{
@@ -96,6 +104,7 @@ export const AppContextProvider = ({ children }) => {
         setContentViewType,
         getDataCount,
         updateTaskStatus,
+        dayjsToday: today,
       }}
     >
       {children}

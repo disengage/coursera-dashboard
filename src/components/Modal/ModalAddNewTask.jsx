@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import { AppContext } from "../../providers/Contexts";
 import { HSOverlay } from "preline";
 import DueDatePicker from "./DueDatePicker";
+import { v4 as uuidv4 } from "uuid";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-const ModalAddNewTask = ({ status, editMode, editData }) => {
+const ModalAddNewTask = ({ status, editMode }) => {
   const appContext = useContext(AppContext);
 
   const datePickerRef = useRef();
@@ -50,8 +51,8 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
   }
 
   useEffect(() => {
+    const editData = appContext.data.editingTask;
     if (!initialView.current && editMode && editData) {
-      console.log(editData);
       initialView.current = true;
       setId(editData.id);
       setTaskStatus(editData.status);
@@ -60,7 +61,7 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
       setEditDesc(editData.desc);
       datePickerRef.current.setSelected(editData.dueDate);
     }
-  }, [appContext.editingTask, editData, editMode]);
+  }, [appContext.data.editingTask, editMode]);
 
   const validateInput = (close) => {
     const name = editName;
@@ -69,9 +70,16 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
     const isClose = typeof close == "boolean" && close;
     if (name !== "" && dueDate !== "" && isClose) {
       if (editMode) {
-        appContext.editTask({ id, name, desc, status: taskStatus, dueDate });
+        appContext.dispatch({
+          type: "updateTask",
+          id: id,
+          task: { id, name, desc, status: taskStatus, dueDate },
+        });
       } else {
-        appContext.addNewTask({ name, desc, status: taskStatus, dueDate });
+        appContext.dispatch({
+          type: "addTask",
+          task: { id: uuidv4(), name, desc, status: taskStatus, dueDate },
+        });
       }
       HSOverlay.close(document.querySelector(`#${modalName}`));
       resetInput();
@@ -88,7 +96,7 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
     setTxtTaskNameStyle(borderStyle.nornal);
     datePickerRef.current.isInvalid(false);
     datePickerRef.current.reset();
-    appContext.setEditingTaskId(undefined);
+    appContext.dispatch({ type: "setEditingTaskId", id: undefined });
     initialView.current = false;
   };
 
@@ -219,7 +227,6 @@ const ModalAddNewTask = ({ status, editMode, editData }) => {
 ModalAddNewTask.propTypes = {
   status: PropTypes.string,
   editMode: PropTypes.bool,
-  editData: PropTypes.object,
 };
 
 export default ModalAddNewTask;

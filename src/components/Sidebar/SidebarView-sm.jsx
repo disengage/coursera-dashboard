@@ -7,7 +7,7 @@ const SidebarViewSM = ({ onClickMenu }) => {
   const appContext = useContext(AppContext);
 
   return (
-    <div className="xs:block mt-4 hidden w-full px-8 sm:block md:block lg:block">
+    <div className="mt-4 hidden w-full px-8 xs:block sm:block md:block lg:block">
       <div className="flex items-center justify-center">
         <div className="grow">Workspace</div>
         <div className="flex-none">
@@ -20,7 +20,7 @@ const SidebarViewSM = ({ onClickMenu }) => {
               aria-expanded="false"
               aria-label="Dropdown"
             >
-              {appContext.selectedProject}
+              {appContext.data?.selectedProject}
               <svg
                 className="size-4 hs-dropdown-open:rotate-180"
                 xmlns="http://www.w3.org/2000/svg"

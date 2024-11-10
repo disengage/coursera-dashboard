@@ -1,16 +1,14 @@
-import { useContext, useState } from "react";
-import { AppContext } from "../../providers/Contexts";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 
-const SidebarMenu = ({ onClickMenu = undefined }) => {
+const SidebarMenu = ({ onClickMenu = undefined, menu }) => {
   const defaultStyle = "text-gray-400";
   const activeStyle = "text-gray-800";
 
-  const appContext = useContext(AppContext);
-  const [selected, setSelected] = useState(appContext.data.projects[0]);
+  const [selected, setSelected] = useState(menu[0]);
 
   const setTextStyle = (key) => {
     return key === selected ? activeStyle : defaultStyle;
@@ -18,19 +16,19 @@ const SidebarMenu = ({ onClickMenu = undefined }) => {
 
   return (
     <div className="flex flex-col">
-      {appContext.data.projects.map((menu) => {
+      {menu.map((item) => {
         return (
           <a
-            className={`-mt-px inline-flex items-center gap-x-3.5 px-4 py-3 text-sm ${setTextStyle(menu)}`}
+            className={`-mt-px inline-flex items-center gap-x-3.5 px-4 py-3 text-sm ${setTextStyle(item)}`}
             onClick={(e) => {
               e.preventDefault();
-              onClickMenu && onClickMenu(menu);
-              setSelected(menu);
+              onClickMenu && onClickMenu(item);
+              setSelected(item);
             }}
-            key={menu}
+            key={item}
           >
             <FontAwesomeIcon icon={faList} />
-            {menu}
+            {item}
           </a>
         );
       })}
@@ -40,6 +38,7 @@ const SidebarMenu = ({ onClickMenu = undefined }) => {
 
 SidebarMenu.propTypes = {
   onClickMenu: PropTypes.func.isRequired,
+  menu: PropTypes.array,
 };
 
 export default SidebarMenu;

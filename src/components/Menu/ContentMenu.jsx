@@ -1,5 +1,4 @@
-import { useContext, useMemo } from "react";
-import { AppContext } from "../../providers/Contexts";
+import { useMemo, useContext } from "react";
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +6,7 @@ import {
   faChartSimple,
   faBarsStaggered,
 } from "@fortawesome/free-solid-svg-icons";
+import { AppContext } from "../../providers/Contexts";
 
 const ContentMenu = ({ onClickMenu = undefined }) => {
   const menuNamed = useMemo(
@@ -23,7 +23,9 @@ const ContentMenu = ({ onClickMenu = undefined }) => {
   const activeStyle = "text-gray-800 border-b-2 border-neutral-500";
 
   const setTextStyle = (key) => {
-    return key === appContext.selectedContentView ? activeStyle : defaultStyle;
+    return key === appContext.data.selectedContentView
+      ? activeStyle
+      : defaultStyle;
   };
 
   return (
@@ -36,7 +38,6 @@ const ContentMenu = ({ onClickMenu = undefined }) => {
               onClick={(e) => {
                 e.preventDefault();
                 onClickMenu && onClickMenu(menu.name);
-                appContext.setContentViewType(menu.name);
               }}
               key={menu.name}
             >

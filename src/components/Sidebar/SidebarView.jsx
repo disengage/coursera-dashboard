@@ -9,9 +9,9 @@ import {
 
 import SidebarMenu from "./SidebarMenu";
 
-const SidebarView = ({ onClickMenu = undefined }) => {
+const SidebarView = ({ onClickMenu = undefined, menu }) => {
   return (
-    <div className="hidden h-screen flex-none border border-neutral-200 bg-neutral-50 max-sm:p-0 xl:block 2xl:block">
+    <div className="max-sm:p-0 hidden h-screen flex-none border border-neutral-200 bg-neutral-50 xl:block 2xl:block">
       <div className="hs-accordion-group m-8">
         <div
           className="hs-accordion active"
@@ -39,7 +39,7 @@ const SidebarView = ({ onClickMenu = undefined }) => {
             role="region"
             aria-labelledby="hs-basic-with-title-and-arrow-stretched-heading-one"
           >
-            <SidebarMenu onClickMenu={onClickMenu} />
+            <SidebarMenu menu={menu} onClickMenu={onClickMenu} />
           </div>
         </div>
       </div>
@@ -49,6 +49,7 @@ const SidebarView = ({ onClickMenu = undefined }) => {
 
 SidebarView.propTypes = {
   onClickMenu: PropTypes.func.isRequired,
+  menu: PropTypes.array,
 };
 
 export default SidebarView;

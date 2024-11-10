@@ -48,6 +48,7 @@ const TaskListView = ({ visibility = true }) => {
       data-hs-accordion-always-open=""
     >
       {statusList.reverse().map((menu, index) => {
+        const taskCount = appContext.getTaskCountByStatus(menu.status);
         return (
           <div
             className="hs-accordion mt-px-8 border first:rounded-t-lg last:rounded-b-lg"
@@ -75,7 +76,7 @@ const TaskListView = ({ visibility = true }) => {
                     icon={menu.icon}
                     className="size-4 shrink-0"
                   />
-                  {`${menu.name} (${appContext.getDataCount(menu.status)})`}
+                  {`${menu.name} (${taskCount})`}
                 </span>
               </div>
             </button>

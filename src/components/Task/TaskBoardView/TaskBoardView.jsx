@@ -51,13 +51,13 @@ const TaskBoardView = ({ visibility = true }) => {
   };
 
   const editTask = (index) => {
-    appContext.setEditingTaskId(index);
+    appContext.dispatch({ type: "setEditingTaskId", id: index });
     HSOverlay.open(document.querySelector("#hs-edit-modal"));
   };
 
   const onClickDeleteTask = () => {
     if (requestDeleteRef.current) {
-      appContext.deleteTask(requestDeleteRef.current);
+      appContext.dispatch({ type: "deleteTask", id: requestDeleteRef.current });
       requestDeleteRef.current = undefined;
     }
   };
@@ -71,7 +71,7 @@ const TaskBoardView = ({ visibility = true }) => {
       if (rawId != "" && status != "") {
         const matched = rawId.match(/task-id-(.+)/);
         const taskId = matched.length >= 2 ? matched[1] : 0;
-        appContext.updateTaskStatus(taskId, status);
+        appContext.dispatch({ type: "updateTaskStatus", id: taskId, status });
       }
     } catch (error) {
       console.error(error);
@@ -82,13 +82,14 @@ const TaskBoardView = ({ visibility = true }) => {
     return (
       <AppContext.Consumer>
         {(appContext) => {
-          if (appContext.selectedContentView != "TaskBoardView") {
+          const selectedProject = appContext.data.selectedProject;
+          const selectedContentView = appContext.data.selectedContentView;
+          if (selectedContentView != "TaskBoardView") {
             // Avoid un-necessary re-render, Because consumer trigger every changes
             return;
           }
 
-          const projectName = appContext.selectedProject;
-          const tasks = appContext.data.tasks[projectName] ?? [];
+          const tasks = appContext.data.data.tasks[selectedProject] ?? [];
           const data = tasks.filter((task) => task.status === status) ?? [];
 
           return (
@@ -146,9 +147,10 @@ const TaskBoardView = ({ visibility = true }) => {
         className={`${visibile} mt-4 gap-8 sm:columns-1 md:columns-1 lg:columns-3 xl:columns-3 2xl:columns-3`}
       >
         {statusList.map((list, index) => {
+          const taskCount = appContext.getTaskCountByStatus(list.status);
           return (
             <div
-              className="xs:h-fit mb-6 h-screen w-full rounded-lg sm:h-fit md:h-fit 2xl:mb-0"
+              className="mb-6 h-screen w-full rounded-lg xs:h-fit sm:h-fit md:h-fit 2xl:mb-0"
               key={index}
             >
               <div className="flex flex-row bg-gray-100 p-2">
@@ -163,9 +165,7 @@ const TaskBoardView = ({ visibility = true }) => {
                     {list.name}
                   </span>
                 </div>
-                <div className="basis-1/4 p-2 text-right">
-                  {appContext.getDataCount(list.status)}
-                </div>
+                <div className="basis-1/4 p-2 text-right">{taskCount}</div>
               </div>
               <div
                 className="relative min-h-[126px] bg-gray-100 px-4 pb-10 pt-[1px]"
